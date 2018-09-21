@@ -1,4 +1,4 @@
-package com.lzh.ganzhiwuxing.ganzhiwuxing
+package org.lzh.ganzhiwuxing
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException
 
