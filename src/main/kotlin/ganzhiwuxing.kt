@@ -53,7 +53,9 @@ class TianGan(val name: String) {
     }
 
     operator fun plus(other: Int): TianGan {
-        var tmp = (num + other + 10) % 10
+        var tmp = other
+        while (tmp<0)tmp+=10
+        tmp = (num + tmp + 10) % 10
         if (tmp == 0) tmp = 10
         return TianGan(numToName[tmp - 1])
     }
@@ -112,7 +114,9 @@ class DiZhi(val name: String) {
     }
 
     operator fun plus(other: Int): DiZhi {
-        var tmp = (num + other + 12) % 12
+        var tmp = other
+        while (tmp<0)tmp+=12
+        tmp = (num + other + 12) % 12
         if (tmp == 0) tmp = 12
         return DiZhi(numToName[tmp - 1])
     }
