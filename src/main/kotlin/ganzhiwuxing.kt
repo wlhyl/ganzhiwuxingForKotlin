@@ -1,15 +1,12 @@
-package org.lzh.ganzhiwuxing
+package pub.teanote.ganzhiwuxing
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException
-
-
-class WuXing(val name: String) {
+class WuXing(private val name: String) {
     private val numToName: Array<String> = arrayOf("木", "火", "土", "金", "水")
-    val num: Int = numToName.indexOf(name) + 1
+    private val num: Int = numToName.indexOf(name) + 1
 
     init {
         if (name !in numToName) {
-            throw ValueException(name)
+            throw IllegalArgumentException(name)
         }
 
     }
@@ -23,26 +20,35 @@ class WuXing(val name: String) {
         return name
     }
 
+    /**
+     * 克
+     */
     fun ke(other: WuXing): Boolean {
         return (num - other.num - 3) % 5 == 0
     }
 
+    /**
+     * 生
+     */
     fun sheng(other: WuXing): Boolean {
         return (num - other.num - 4) % 5 == 0
     }
 }
 
-class TianGan(val name: String) {
+class TianGan(private val name: String) {
     private val numToName: Array<String> = arrayOf("甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸")
     private val numToWuXing: Array<String> = arrayOf("木", "火", "土", "金", "水")
-    val num: Int = numToName.indexOf(name) + 1
+    private val num: Int = numToName.indexOf(name) + 1
+    // 天干的五行
     val wuXing = WuXing(numToWuXing[(num + 1) / 2 - 1])
-    val yang = num % 2 != 0
+    // 阳
+    val masculine = num % 2 != 0
+    // 太玄数
     val taiXuan = if (num <= 5) 10 - num else 15 - num
 
     init {
         if (name !in numToName) {
-            throw ValueException(name)
+            throw IllegalArgumentException(name)
         }
 
     }
@@ -68,41 +74,52 @@ class TianGan(val name: String) {
         return name
     }
 
+    /**
+     * 克
+     */
     fun ke(other: TianGan): Boolean {
         return wuXing.ke(other.wuXing)
     }
 
+    /**
+     * 生
+     */
     fun sheng(other: TianGan): Boolean {
         return wuXing.sheng(other.wuXing)
     }
 
+    /**
+     * 五合
+     */
     fun wuHe(other: TianGan): Boolean {
         if (num == other.num) return false
         return (num - other.num) % 5 == 0
     }
 }
 
-class DiZhi(val name: String) {
+class DiZhi(private val name: String) {
     private val numToName: Array<String> = arrayOf("子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥")
     private val numToWuXing: Array<String> = arrayOf("木", "火", "土", "金", "水")
     val num: Int = numToName.indexOf(name) + 1
-    val wuXing: WuXing = {
+    val wuXing: WuXing = run {
         var tmp = (num + 10) % 12
         if (tmp == 0) tmp = 12
-
         if (tmp % 3 == 0) {
             WuXing("土")
         } else {
             tmp = tmp / 3 + tmp / 7 + 1
             WuXing(numToWuXing[tmp - 1])
         }
-    }()
-    val yang = num % 2 != 0
+    }
+
+    // 阳
+    val masculine = num % 2 != 0
+    // 太玄数
     val taiXuan = if (num <= 6) 10 - num else 16 - num
 
     init {
         if (name !in numToName) {
-            throw ValueException(name)
+            throw IllegalArgumentException(name)
         }
 
 
@@ -129,30 +146,48 @@ class DiZhi(val name: String) {
         return name
     }
 
+    /**
+     * 克
+     */
     fun ke(other: DiZhi): Boolean {
         return wuXing.ke(other.wuXing)
     }
 
+    /**
+     * 生
+     */
     fun sheng(other: DiZhi): Boolean {
         return wuXing.sheng(other.wuXing)
     }
 
+    /**
+     * 三合
+     */
     fun sanHe(other: DiZhi): Boolean {
         if (num == other.num) return false
         return (num - other.num) % 4 == 0
     }
 
+    /**
+     * 六合
+     */
     fun liuHe(other: DiZhi): Boolean {
         if (num == other.num) return false
         return (num + other.num - 15) % 12 == 0
     }
 
 
+    /**
+     * 六冲
+     */
     fun liuChong(other: DiZhi): Boolean {
         if (num == other.num) return false
         return (num - other.num) % 6 == 0
     }
 
+    /**
+     * 刑
+     */
     fun xing(other: DiZhi): Boolean {
         when {
             name == "子" && other.name == "卯" -> return true
@@ -173,11 +208,11 @@ class DiZhi(val name: String) {
 }
 
 class GanZhi(val gan: TianGan, val zhi: DiZhi) {
-    val num: Int = getNumber()
+    private val num: Int = getNumber()
 
     init {
-        if (gan.yang != zhi.yang) {
-            throw ValueException("干支阴阳不相同")
+        if (gan.masculine != zhi.masculine) {
+            throw IllegalArgumentException("干支阴阳不相同")
         }
     }
 
