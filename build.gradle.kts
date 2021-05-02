@@ -1,14 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.31"
-    kotlin("plugin.spring") version "1.4.31"
+    kotlin("jvm") version "1.4.32"
+//    kotlin("plugin.spring") version "1.4.32"
     id("maven-publish")
 }
 
 group ="pub.teanote"
 //version '1.0'
 version = "1.0-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
 
 repositories {
     mavenCentral()
@@ -23,8 +25,14 @@ dependencies {
 }
 
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "1.8"
+//tasks.withType<KotlinCompile>() {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "1.6"
+    }
 }
 
 //compileTestKotlin {
