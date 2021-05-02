@@ -1,8 +1,8 @@
-package com.lzh.ganzhiwuxing.ganzhiwuxing
+package pub.teanote.ganzhiwuxing
 
-import org.lzh.ganzhiwuxing.TianGan
 
 fun main(args: Array<String>) {
- val a = TianGan("壬")
-    println(a+(-33))
+    val  a = GanZhi(TianGan("甲"), DiZhi("子"))
+    val b = GanZhi(TianGan("癸"), DiZhi("亥"))
+    println(b - a)
 }

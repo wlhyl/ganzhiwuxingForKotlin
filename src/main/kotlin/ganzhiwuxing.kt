@@ -1,5 +1,9 @@
 package pub.teanote.ganzhiwuxing
 
+/**
+ * @param name
+ * 五行的名字，取值："木", "火", "土", "金", "水"
+ */
 class WuXing(private val name: String) {
     private val numToName: Array<String> = arrayOf("木", "火", "土", "金", "水")
     private val num: Int = numToName.indexOf(name) + 1
@@ -35,6 +39,10 @@ class WuXing(private val name: String) {
     }
 }
 
+/**
+ * @param name
+ * 天干的名字，取值："甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"
+ */
 class TianGan(private val name: String) {
     private val numToName: Array<String> = arrayOf("甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸")
     private val numToWuXing: Array<String> = arrayOf("木", "火", "土", "金", "水")
@@ -60,14 +68,15 @@ class TianGan(private val name: String) {
 
     operator fun plus(other: Int): TianGan {
         var tmp = other
-        while (tmp<0)tmp+=10
+        while (tmp < 0)tmp+=10
         tmp = (num + tmp + 10) % 10
         if (tmp == 0) tmp = 10
         return TianGan(numToName[tmp - 1])
     }
 
     operator fun minus(other: TianGan): Int {
-        return num - other.num
+        // 返回值为整数
+        return (num - other.num + 10) % 12
     }
 
     override fun toString(): String {
@@ -97,6 +106,10 @@ class TianGan(private val name: String) {
     }
 }
 
+/**
+ * @param name
+ * 地支名字，取值："子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"
+ */
 class DiZhi(private val name: String) {
     private val numToName: Array<String> = arrayOf("子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥")
     private val numToWuXing: Array<String> = arrayOf("木", "火", "土", "金", "水")
@@ -132,14 +145,15 @@ class DiZhi(private val name: String) {
 
     operator fun plus(other: Int): DiZhi {
         var tmp = other
-        while (tmp<0)tmp+=12
+        while (tmp < 0)tmp+=12
         tmp = (num + other + 12) % 12
         if (tmp == 0) tmp = 12
         return DiZhi(numToName[tmp - 1])
     }
 
     operator fun minus(other: DiZhi): Int {
-        return num - other.num
+        // 返回整数值
+        return (num - other.num + 12) % 12
     }
 
     override fun toString(): String {
@@ -207,6 +221,12 @@ class DiZhi(private val name: String) {
     }
 }
 
+/**
+ * @param gan
+ * 天干
+ * @zhi
+ * 地支
+ */
 class GanZhi(val gan: TianGan, val zhi: DiZhi) {
     private val num: Int = getNumber()
 
@@ -245,6 +265,7 @@ class GanZhi(val gan: TianGan, val zhi: DiZhi) {
     }
 
     operator fun minus(other: GanZhi): Int {
-        return num - other.num
+        // 返回整数值
+        return (num - other.num + 60) % 60
     }
 }
