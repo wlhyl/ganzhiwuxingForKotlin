@@ -44,6 +44,12 @@ tasks.test {
     useJUnitPlatform()
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+
 publishing {
     publications {
         create<MavenPublication>("maven") {

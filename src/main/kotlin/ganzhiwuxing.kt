@@ -146,7 +146,7 @@ class DiZhi(private val name: String) {
     operator fun plus(other: Int): DiZhi {
         var tmp = other
         while (tmp < 0)tmp+=12
-        tmp = (num + other + 12) % 12
+        tmp = (num + tmp) % 12
         if (tmp == 0) tmp = 12
         return DiZhi(numToName[tmp - 1])
     }
