@@ -47,11 +47,20 @@ class TianGan(private val name: String) {
     private val numToName: Array<String> = arrayOf("甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸")
     private val numToWuXing: Array<String> = arrayOf("木", "火", "土", "金", "水")
     private val num: Int = numToName.indexOf(name) + 1
-    // 天干的五行
+
+    /**
+     * 天干的五行
+     */
     val wuXing = WuXing(numToWuXing[(num + 1) / 2 - 1])
-    // 阳
+
+    /**
+     * 阳
+     */
     val masculine = num % 2 != 0
-    // 太玄数
+
+    /**
+     * 太玄数
+     */
     val taiXuan = if (num <= 5) 10 - num else 15 - num
 
     init {
@@ -76,7 +85,7 @@ class TianGan(private val name: String) {
 
     operator fun minus(other: TianGan): Int {
         // 返回值为整数
-        return (num - other.num + 10) % 12
+        return (num - other.num + 10) % 10
     }
 
     override fun toString(): String {
@@ -230,10 +239,31 @@ class DiZhi(private val name: String) {
 class GanZhi(val gan: TianGan, val zhi: DiZhi) {
     private val num: Int = getNumber()
 
+    /**
+     * 纳音
+     */
+    val naYin :WuXing
+
     init {
         if (gan.masculine != zhi.masculine) {
             throw IllegalArgumentException("干支阴阳不相同")
         }
+
+        val wuXingName: Array<String> = arrayOf("木", "火", "土", "金", "水")
+
+        val g = if(gan.masculine) gan + 1 else gan + -1
+        val z = if(zhi.masculine) zhi + 1 else zhi + -1
+        var n = (49 - (gan.taiXuan + zhi.taiXuan + g.taiXuan + z.taiXuan)) % 10
+        val w = when(n){
+            1,6->WuXing("水")
+            2,7 -> WuXing("火")
+            3,8 -> WuXing("木")
+            4,9 -> WuXing("金")
+            else -> WuXing("土")
+        }
+
+        n = (wuXingName.indexOf(w.toString()) + 1) % 5
+        this.naYin = WuXing(wuXingName[n])
     }
 
     private fun getNumber(): Int {
